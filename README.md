@@ -7,7 +7,7 @@ API that validates and standardizes property addresses.
 This app only has 2 endpoints:
 
 - `GET /health`: just a quick check to make sure that the app is working.
-- `POST /validate-address`: accepts an `address` property in free-form text as part of the request body and returns a structured, validated version of the address, including street, number, city, state, and zip code. It also returns if the address is valid, corrected or unverifiable. For now, this is strictly limited to US addresses.
+- `POST /address/validate`: accepts an `address` property in free-form text as part of the request body and returns a structured, validated version of the address, including street, number, city, state, and zip code. It also returns if the address is valid, corrected or unverifiable. For now, this is strictly limited to US addresses.
 
 ## Getting Started
 

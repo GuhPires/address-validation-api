@@ -1,7 +1,7 @@
 import { buildApp } from "./app.js";
 import { config } from "./config/env.js";
 
-const app = buildApp();
+const app = buildApp({ logger: config.nodeEnv === "development" });
 
 try {
 	const address = await app.listen({ port: config.port });
