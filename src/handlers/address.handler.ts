@@ -2,6 +2,12 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { AddressValidationBody } from "../schemas/address.schema.js";
 import { Nominatim } from "../services/Nominatim.js";
 
+const STATUS_TYPE = {
+	VALID: "valid",
+	CORRECTED: "corrected",
+	UNVERIFIABLE: "unverifiable",
+} as const;
+
 export async function addressValidationHandler(
 	request: FastifyRequest<{ Body: AddressValidationBody }>,
 	reply: FastifyReply
@@ -18,7 +24,8 @@ export async function addressValidationHandler(
 	try {
 		const addressInfo = await nominatim.searchAddress(address);
 
-		if (!addressInfo.features.length) return { status: "unverifiable" };
+		if (!addressInfo.features.length)
+			return { status: STATUS_TYPE.UNVERIFIABLE };
 
 		const {
 			properties: {
@@ -37,7 +44,7 @@ export async function addressValidationHandler(
 
 		// TODO: check for "corrected"
 		return {
-			status: "valid",
+			status: STATUS_TYPE.VALID,
 			address: {
 				number: housenumber || "N/A",
 				street: type === "street" ? name : street || "",
