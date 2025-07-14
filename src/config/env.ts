@@ -2,15 +2,20 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-function getEnv(name: string, defaultValue?: string): string {
+function getEnv<T>(name: string, defaultValue?: T): T {
 	const value = process.env[name] ?? defaultValue;
 	if (!value) {
 		throw new Error(`Missing required environment variable: ${name}`);
 	}
-	return value;
+	return value as T;
 }
 
-export const config = {
+type Config = {
+	port: number;
+	nodeEnv: "production" | "development";
+};
+
+export const config: Config = {
 	port: parseInt(getEnv("PORT", "3000")),
-	nodeEnv: getEnv("NODE_ENV", "development"),
+	nodeEnv: getEnv<Config["nodeEnv"]>("NODE_ENV", "development"),
 };
