@@ -11,13 +11,13 @@ export type AddressValidationBody = FromSchema<
 	typeof addressValidationBodySchema
 >;
 
-export const addressValidationResposeSchema = {
+export const addressValidationResponseSchema = {
 	200: {
 		type: "object",
 		properties: {
-			validated: { type: "boolean" },
+			status: { type: "string", enum: ["valid", "corrected", "unverifiable"] },
 		},
-		required: ["validated"],
+		required: ["status"],
 	},
 	400: {
 		type: "object",

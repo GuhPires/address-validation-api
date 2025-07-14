@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { addressValidationHandler } from "../handlers/address.handler.js";
 import {
 	addressValidationBodySchema,
-	addressValidationResposeSchema,
+	addressValidationResponseSchema,
 } from "../schemas/address.schema.js";
 
 export default async function addressRoute(fastify: FastifyInstance) {
@@ -11,7 +11,7 @@ export default async function addressRoute(fastify: FastifyInstance) {
 		{
 			schema: {
 				body: addressValidationBodySchema,
-				response: addressValidationResposeSchema,
+				response: addressValidationResponseSchema,
 			},
 		},
 		addressValidationHandler

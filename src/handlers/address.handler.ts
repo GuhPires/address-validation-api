@@ -14,5 +14,5 @@ export async function addressValidationHandler(
 
 	console.log("Address:", address, "type:", typeof address);
 
-	return { validated: true };
+	return { status: "valid" };
 }
