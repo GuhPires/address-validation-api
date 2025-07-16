@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { AddressValidationBody } from "../schemas/address.schema.js";
 import { Nominatim } from "../services/Nominatim.js";
+import { jaccardSimilarity } from "../utils/jaccardSimilarity.js";
 
 const STATUS_TYPE = {
 	VALID: "valid",
@@ -33,7 +34,7 @@ export async function addressValidationHandler(
 					type,
 					name,
 					housenumber,
-					street,
+					street: streetInfo,
 					city,
 					state,
 					postcode,
@@ -42,12 +43,24 @@ export async function addressValidationHandler(
 			},
 		} = addressInfo.features[0];
 
-		// TODO: check for "corrected"
+		const street = type === "street" ? name : streetInfo;
+		let status: (typeof STATUS_TYPE)[keyof typeof STATUS_TYPE] =
+			STATUS_TYPE.VALID;
+
+		// usually users type only the street + city so I am only comparing that case but
+		// I could also check on the length and prepare a function to add more address properties
+		const similarityScore = jaccardSimilarity(
+			address,
+			`${housenumber} ${type === "street" ? name : street}, ${city}`
+		);
+
+		if (similarityScore < 0.5) status = STATUS_TYPE.CORRECTED;
+
 		return {
-			status: STATUS_TYPE.VALID,
+			status,
 			address: {
 				number: housenumber || "N/A",
-				street: type === "street" ? name : street || "",
+				street: street || "",
 				city: city || "",
 				state: state || "",
 				zip: postcode || "",
